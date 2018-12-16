@@ -142,11 +142,12 @@ class MapGraph:
         # Now it the unit is at a distance 0 of its border, it scores.
         # The unit is deleted and we return the event 'scored' to recognize
         # that (along with the last position of the unit)
+        # We also put the life of the unit to zero so that it can be removed later
         dmat = self.distance_maps[unit['target']]
         last_x, last_y = unit['pos']
         if not dmat[last_x, last_y]: # true if zero
             last_x, last_y = unit['pos']
-            del unit
+            unit['stability'] = 0
             return [('score', (last_x, last_y))]
         # else we just move the unit according to the direction algorithm
         new_x, new_y = self.get_direction(unit)
