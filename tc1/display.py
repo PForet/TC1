@@ -25,6 +25,9 @@ class Matplotlib_display:
         for au in newstate['a_units']:
             x,y = au['pos']
             self._grid[x, y] = 6 + au['id']
+        # Also log the health of the players:
+        self.s_health = newstate['s_health']
+        self.a_health = newstate['a_health']
 
     def _get_symbol(self, x):
         args = {}
@@ -64,12 +67,21 @@ class Matplotlib_display:
     def _plot_one_state(self):
         plt.xlim(0,29)
         plt.ylim(0,29)
+        # Plot the grid and the units
         for x in range(self.PADDED_GRID_SIZE):
             for y in range(self.PADDED_GRID_SIZE):
                 idx = self._grid[x,y]
                 s, args = self._get_symbol(idx)
                 plt.text(x, y, s, horizontalalignment='center',
                         verticalalignment='center', **args)
+        # Print the health too
+        s = 'Ally health: {}'.format(self.s_health)
+        plt.text(0, 0, s, horizontalalignment='left', verticalalignment='bottom',
+                bbox = dict(boxstyle='square', facecolor='white', alpha=1))
+        s = 'Ennemy health: {}'.format(self.a_health)
+        plt.text(0, 2, s, horizontalalignment='left', verticalalignment='bottom',
+                bbox = dict(boxstyle='square', facecolor='white', alpha=1))
+
         self.camera.snap()
 
     def animate_logs(self, logs, saveas = None):
