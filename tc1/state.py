@@ -96,3 +96,15 @@ class GameState:
         else:
             self.a_units.append(spec)
 
+    def remove_dead_units(self):
+        """
+        Remove units whose stability has reached zero
+        """
+        for i,u in enumerate(self.a_units):
+            if u['stability'] <= 0:
+                del self.a_units[i]
+        for i,u in enumerate(self.s_units):
+            if u['stability'] <= 0:
+                del self.s_units[i]
+
+
