@@ -19,6 +19,7 @@ class Engine:
         _logs = []
         for _ in range(nstepsmax):
             self.map_graph(self.game_state)
+            self.game_state.remove_dead_units()
             _logs.append(self.game_state.serialize_state())
 
         self.display_util.animate_logs(_logs, savepath)
