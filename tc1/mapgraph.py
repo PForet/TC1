@@ -58,13 +58,22 @@ class MapGraph:
         """
         q = Queue()
         distance_graph = self._dtemplate.copy()
-        initial_nodes = self.get_frontier_nodes(border_id)
-        for n in initial_nodes:
-            # check if the starting node is on a defensive unit
-            if self._grid[n[0], n[1]]:
-                continue
-            distance_graph[n[0], n[1]] = 0
-            q.put(n)
+        # Initialize the queue
+        if isinstance(border_id, int): # if we get an int, we're looking for a border
+            initial_nodes = self.get_frontier_nodes(border_id)
+            for n in initial_nodes:
+                # check if the starting node is on a defensive unit
+                if self._grid[n[0], n[1]]:
+                    continue
+                distance_graph[n[0], n[1]] = 0
+                q.put(n)
+        elif isinstance(border_id, tuple): # Looking for a path to a custom node
+            cx,cy = border_id
+            if self._grid[cx,cy]:
+                raise ValueError("Can't compute a path to occupied node ({},{})".format(cx,cy))
+            distance_graph[cx,cy] = 0
+            q.put((cx,cy))
+        # BFS on the graph
         while not q.empty():
             nx, ny = q.get()
             c = distance_graph[nx, ny]
@@ -155,6 +164,37 @@ class MapGraph:
         return []
 
 
+    def find_deepest_position(self, unit):
+        """
+        Find the deepest position into the ennemy territory to self-destruct
+        here. We follow the official rule:
+             The deepest location is the location with the furthest Y coordinate
+             from your territory. If multiple such locations are reachable, the
+             Unit will choose the one closest to its target
+        """
+        # For now, we do a BFS to find all the accessible nodes, before picking the
+        # best one. We don't memorize the result, so there might be efficiency issues
+        q = Queue(); q.put(unit['pos']); visited = set(); bestx, besty = unit['pos']
+        while q.not_empty():
+            x,y = q.get()
+            for dx, dy in [(0,1), (0,-1), (1,0), (-1,0)]:
+                if self._grid[x+dx,y+dy] or (x+dx, y+dy) in visited:
+                    continue
+                q.put((x+dx, y+dy)); visited.add((x+dx, y+dy))
+        # Now find the best node by iterating on the set of visited nodes
+        prefered_directions = {
+                2:(1,1), # If target border is 2, we prefer the big x and y coordinates
+                3:(-1,1), 4:(-1,-1), 5:(1,1)
+                }
+        px,py = prefered_directions[unit['target']]
+        for sx,sy in visited:
+            if sy*py > besty*py: # The y coordinate has priority when selecting the best node
+                besty = sy; bestx = sx
+            elif sy == besty:
+                if sx*px > bestx*px: # If equality on y coordinate, look for best x
+                    bestx = sx
+        return bestx, besty
+
     def get_direction(self, unit):
         """
         Return a couple (x,y) giving the optimal mouvement for
@@ -162,8 +202,17 @@ class MapGraph:
         For now, undefined behavior when the frontier is not accessible
         """
         cx, cy = unit['pos']
+        # First, check if the target border is accessible
         target_border = unit['target']
         d_map = self.distance_maps[target_border]
+        # If our position on the distance map is +inf, then we can't access
+        # the target border and we must find a place to self destruct
+        if d_map[cx, cy] == self.INTMAX:
+            # We find the deepest accessible position
+            tx, ty = self.find_deepest_position(unit)
+            d_map = self.get_dijkstra((tx, ty))
+        # Now that we get the distance map, we can find the prefered movement
+        # according to the rules
         mindist = self.INTMAX
         for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
             if self._grid[cx+dx, cy+dy]: # non accessible node
