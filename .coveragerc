@@ -1,0 +1,4 @@
+[run]
+branch = True # every corner case of every statement is critical 
+omit = 
+    tc1/display.py
