@@ -21,11 +21,17 @@ class Engine:
     def simulate_and_show(self, nstepsmax, savepath=None):
         _logs = []
         for _ in range(nstepsmax):
-            self.map_graph(self.game_state)
-            self.damage_engine(self.game_state)
-            self.game_state.remove_dead_units()
+            self.step()
             _logs.append(self.game_state.serialize_state())
-
         self.display_util.animate_logs(_logs, savepath)
+
+    def step(self):
+        """Perform a unique step in the game"""
+        # Start by moving the units
+        self.map_graph(self.game_state)
+        # Apply the damages
+        self.damage_engine(self.game_state)
+        # Remove the dead units
+        self.game_state.remove_dead_units()
 
 

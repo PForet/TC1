@@ -1,5 +1,6 @@
 UNITS_DESC = {
         'ping':{
+            'name':'ping',
             'id':1,
             'cost':1,
             'stability':15,
@@ -8,6 +9,7 @@ UNITS_DESC = {
             'speed':2
             },
         'emp':{
+            'name':'emp',
             'id':2,
             'cost':3,
             'stability':5,
@@ -16,6 +18,7 @@ UNITS_DESC = {
             'speed':4
             },
         'scrambler':{
+            'name':'scrambler',
             'id':3,
             'cost':1,
             'stability':40,
@@ -24,6 +27,7 @@ UNITS_DESC = {
             'speed':4
             },
         'filter':{
+            'name':'filter',
             'id':4,
             'cost':1,
             'stability':60,
@@ -32,6 +36,7 @@ UNITS_DESC = {
             'speed':0
             },
         'encryptor':{
+            'name':'encryptor',
             'id':5,
             'cost':4,
             'stability':30,
@@ -40,6 +45,7 @@ UNITS_DESC = {
             'speed':0
             },
         'destructor':{
+            'name':'destructor',
             'id':6,
             'cost':3,
             'stability':75,

@@ -2,7 +2,7 @@ from .unit_desc import UNITS_DESC
 from copy import deepcopy
 
 class GameState:
-    def __init__(self):
+    def __init__(self, testmode = False):
         self.INITIALE_HEALTH = 30
         self.INITIALE_CORE = 5
         self.INITIALE_BITS = 6
@@ -39,6 +39,16 @@ class GameState:
 
         return deepcopy(dct)
 
+    def _raise(self, error):
+        """
+        Raise a ValueError, except if the state is in testmode. The testmode
+        is only used to bypass all the test in order to test the engine
+        more easily. When using the engine to developpe a model, the testmode
+        should always be desactivated for safety
+        """
+        if not self.testmode:
+            raise ValueError(error)
+
     def add_unit(self, team, unit_name, pos):
         """
         Function to add a new unit to the current game
@@ -58,9 +68,9 @@ class GameState:
         # position if so
         if spec['id'] < 4: # offensive id's all 3 or below
             if team == 's' and pos not in self.FRIENDLY_BORDERS:
-                raise ValueError('Offensive unit must be placed of borderds, but got position {}'.format(pos))
+                self._raise('Offensive unit must be placed of borderds, but got position {}'.format(pos))
             if team == 'a' and pos not in self.ENNEMY_BORDERS:
-                raise ValueError('Offensive unit must be placed of borderds, but got position {}'.format(pos))
+                self._raise('Offensive unit must be placed of borderds, but got position {}'.format(pos))
             # now we define the target border, as offensive units
             # will try to move toward the ennemy border on the
             # opposite side of the board.
@@ -78,9 +88,9 @@ class GameState:
         # side of the arena
         else:
             if team == 's' and pos[1] > 14:
-                raise ValueError('Defensive unit must be placed in your side, but got position {}'.format(pos))
+                self._raise('Defensive unit must be placed in your side, but got position {}'.format(pos))
             if team == 'a' and pos[1] < 15:
-                raise ValueError('Defensive unit must be placed in your side, but got position {}'.format(pos))
+                self._raise('Defensive unit must be placed in your side, but got position {}'.format(pos))
 
         # To know where to move when two nodes are equally close to the border, we need to
         # maintain a variable for the previous move
