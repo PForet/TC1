@@ -7,6 +7,7 @@ before_install:
     - pip install pytest pytest-cov
     - pip install matplotlib
     - pip install coveralls
+    - pip install codecov
 
 install:
     - python setup.py install
@@ -15,6 +16,7 @@ script: py.test --cov=tc1 tests/
 
 after_success:
     - coveralls
+    - codecov
 
 notifications:
   email: false
