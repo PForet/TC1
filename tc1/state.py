@@ -110,11 +110,6 @@ class GameState:
         """
         Remove units whose stability has reached zero
         """
-        for i,u in enumerate(self.a_units):
-            if u['stability'] <= 0:
-                del self.a_units[i]
-        for i,u in enumerate(self.s_units):
-            if u['stability'] <= 0:
-                del self.s_units[i]
-
+        self.a_units = [u for u in self.a_units if u['stability']>0]
+        self.s_units = [u for u in self.s_units if u['stability']>0]
 

@@ -141,6 +141,17 @@ def test_demo():
 
 
 
+def test_tester():
+    """Make sure that the tester can actually raise errors!"""
+    initial_state = [('s', 'ping', (15,1)),
+                     ('a', 'emp', (21,7))]
+    tester = Tester(initial_state)
+    tester.Assert(when=1, what='ping', which='s', where=(15,1))
+    # this line should raise an error:
+    tester.Assert(when=1, what='emp', which='a', where=(7,20))
+    with pytest.raises(ValueError):
+        tester.test()
+
 
 
 
