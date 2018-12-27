@@ -2,7 +2,7 @@ from .unit_desc import UNITS_DESC
 from copy import deepcopy
 
 class GameState:
-    def __init__(self, testmode = False):
+    def __init__(self, testmode=False):
         self.INITIALE_HEALTH = 30
         self.INITIALE_CORE = 5
         self.INITIALE_BITS = 6
@@ -23,6 +23,8 @@ class GameState:
 
         self.s_units = []
         self.a_units = []
+
+        self.testmode = testmode
 
     def serialize_state(self):
         """
