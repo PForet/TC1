@@ -36,3 +36,26 @@ def test_borderInteraction():
     tester.Assert(when=115,what='emp',which='s',where=(27,14))
     tester.Assert(when=116,what='emp',which='s',where=(27,14),with_error=True)
     tester.test()
+
+A
+def test_movementObstacles1():
+    """Test for movement with a linear line of filters"""
+    initial_state = [('s','filter',(25,13))]
+    for i in range(24):
+        initial_state.append(('s','filter',(i,13)))
+    initial_state += [('s','ping',(1,12))]
+    initial_state += [('s','ping',(16,2))]
+    # assert for the path:
+    tester = Tester(initial_state)
+    tester.Assert(37,'ping','s',(21,10))
+    tester.Assert(37,'ping','s',(24,12))
+
+    tester.Assert(38,'ping','s',(21,11))
+    tester.Assert(38,'ping','s',(24,13))
+
+    tester.Assert(33,'ping','s',(17,12))
+    tester.Assert(33,'ping','s',(24,10))
+
+    tester.Assert(51,'ping','s',(24,14))
+    tester.Assert(51,'ping','s',(21,7))
+
