@@ -37,7 +37,7 @@ def test_borderInteraction():
     tester.Assert(when=116,what='emp',which='s',where=(27,14),with_error=True)
     tester.test()
 
-A
+
 def test_movementObstacles1():
     """Test for movement with a linear line of filters"""
     initial_state = [('s','filter',(25,13))]
