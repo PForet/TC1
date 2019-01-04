@@ -83,13 +83,20 @@ class Matplotlib_display:
         s = 'Ennemy health: {}'.format(self.a_health)
         plt.text(0, 2, s, horizontalalignment='left', verticalalignment='bottom',
                 bbox = dict(boxstyle='square', facecolor='white', alpha=1))
-        # Add rectangles for the health
-        xs,ys = zip(*[e[0] for e in self.s_units_health])
-        xa,ya = zip(*[e[0] for e in self.a_units_health])
-        size_s = [4*x[1] for x in self.s_units_health]
-        size_a = [4*x[1] for x in self.a_units_health]
-        plt.scatter(xs,ys,alpha=0.3,color='blue',s=size_s)
-        plt.scatter(xa,ya,alpha=0.3,color='red',s=size_a)
+
+        try:
+            xs,ys = zip(*[e[0] for e in self.s_units_health])
+            size_s = [4*x[1] for x in self.s_units_health]
+            plt.scatter(xs,ys,alpha=0.3,color='blue',s=size_s)
+        except ValueError: # No units
+            pass
+
+        try:
+            xa,ya = zip(*[e[0] for e in self.a_units_health])
+            size_a = [4*x[1] for x in self.a_units_health]
+            plt.scatter(xa,ya,alpha=0.3,color='red',s=size_a)
+        except ValueError: # No units
+            pass
 
         self.camera.snap()
 
