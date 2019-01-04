@@ -175,7 +175,7 @@ class MapGraph:
         # For now, we do a BFS to find all the accessible nodes, before picking the
         # best one. We don't memorize the result, so there might be efficiency issues
         q = Queue(); q.put(unit['pos']); visited = set(); bestx, besty = unit['pos']
-        while q.not_empty():
+        while not q.empty():
             x,y = q.get()
             for dx, dy in [(0,1), (0,-1), (1,0), (-1,0)]:
                 if self._grid[x+dx,y+dy] or (x+dx, y+dy) in visited:
@@ -184,7 +184,7 @@ class MapGraph:
         # Now find the best node by iterating on the set of visited nodes
         prefered_directions = {
                 2:(1,1), # If target border is 2, we prefer the big x and y coordinates
-                3:(-1,1), 4:(-1,-1), 5:(1,1)
+                3:(-1,1), 4:(-1,-1), 5:(1,-1)
                 }
         px,py = prefered_directions[unit['target']]
         for sx,sy in visited:
