@@ -2,6 +2,9 @@ import pytest
 from tc1.state import GameState
 from tc1.engine import Engine
 from collections import defaultdict
+from copy import deepcopy
+
+import pdb
 
 class Tester:
     def __init__(self, initial_state):
@@ -113,6 +116,15 @@ class Tester:
                         self.unit_test(one_test, log, current_frame)
                 else:
                     self.unit_test(one_test, log, current_frame)
+
+    def _save_plot(self, path):
+        """Save a animation of the round up to the last rest, for
+        debut purpose"""
+        eng = Engine()
+        eng.game_state = deepcopy(self._state)
+        #pdb.set_trace()
+        eng.simulate_and_show(self._maxframe, path)
+
 
 def test_demo():
     """Demonstration of how to use the class above"""
